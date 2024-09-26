@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <title>Interactive Gantt Chart with Frappe Gantt</title>
+  <!-- Include Frappe Gantt CSS -->
+  <link rel="stylesheet" href="https://unpkg.com/frappe-gantt/dist/frappe-gantt.css">
+  <!-- Include Day.js library (required by Frappe Gantt) -->
+  <script src="https://unpkg.com/dayjs/dayjs.min.js"></script>
+  <!-- Include Frappe Gantt JS -->
+  <script src="https://unpkg.com/frappe-gantt/dist/frappe-gantt.min.js"></script>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+    }
+    #gantt {
+      width: 100%;
+      height: 500px;
+      overflow-x: auto;
+      overflow-y: auto;
+    }
+  </style>
+</head>
+<body>
+  <h2>Interactive Gantt Chart</h2>
+  <div id="gantt"></div>
+
+  <script>
+    // Define your tasks
+    var tasks = [
+      {
+        id: 'Task 1',
+        name: 'Define Requirements',
+        start: '2024-01-01',
+        end: '2024-01-05',
+        progress: 100,
+        dependencies: '',
+        assigned_to: 'John Doe',
+        priority: 'High'
+      },
+      {
+        id: 'Task 2',
+        name: 'Design',
+        start: '2024-01-06',
+        end: '2024-01-10',
+        progress: 80,
+        dependencies: 'Task 1',
+        assigned_to: 'Jane Smith',
+        priority: 'Medium'
+      },
+      {
+        id: 'Task 3',
+        name: 'Development',
+        start: '2024-01-11',
+        end: '2024-01-20',
+        progress: 50,
+        dependencies: 'Task 2',
+        assigned_to: 'Alice Johnson',
+        priority: 'High'
+      },
+      {
+        id: 'Task 4',
+        name: 'Testing',
+        start: '2024-01-21',
+        end: '2024-01-25',
+        progress: 0,
+        dependencies: 'Task 3',
+        assigned_to: 'Bob Brown',
+        priority: 'Low'
+      },
+      {
+        id: 'Task 5',
+        name: 'Deployment',
+        start: '2024-01-26',
+        end: '2024-01-28',
+        progress: 0,
+        dependencies: 'Task 4',
+        assigned_to: 'Charlie Davis',
+        priority: 'Medium'
+      }
+    ];
+
+    // Initialize the Gantt chart
+    var gantt = new Gantt('#gantt', tasks, {
+      on_date_change: function(task, start, end) {
+        console.log(`${task.name} date changed to ${start} - ${end}`);
+        // Here you can implement logic to save changes back to your data source
+      },
+      on_progress_change: function(task, progress) {
+        console.log(`${task.name} progress changed to ${progress}%`);
+        // Implement logic to save progress changes
+      },
+      custom_popup_html: function(task) {
+        // Custom tooltip content
+        return `
+          <div class="details-container">
+            <h5>${task.name}</h5>
+            <p><strong>Assigned to:</strong> ${task.assigned_to}</p>
+            <p><strong>Priority:</strong> ${task.priority}</p>
+            <p><strong>Start:</strong> ${dayjs(task.start).format('MMM D, YYYY')}</p>
+            <p><strong>End:</strong> ${dayjs(task.end).format('MMM D, YYYY')}</p>
+          </div>
+        `;
+      }
+    });
+  </script>
+</body>
+</html>
